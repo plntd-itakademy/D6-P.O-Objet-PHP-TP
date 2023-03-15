@@ -2,8 +2,11 @@
 
 namespace TP_Pierre_Louis;
 
+require_once('ServiceHelperInterface.php');
+
 class Utilisateur
 {
+    protected $m_helper;
     protected $nom;
     protected $prenom;
     protected $email;
@@ -11,10 +14,11 @@ class Utilisateur
 
     private function __construct($nom, $prenom, $email, $motDePasse)
     {
+        $this->m_helper = ServiceHelper::getInstance();
         $this->nom = $nom;
         $this->prenom = $prenom;
         $this->email = $email;
-        $this->motDePasse = password_hash($motDePasse, PASSWORD_DEFAULT);
+        $this->motDePasse = $this->m_helper->hasherMotDePasse($motDePasse);
     }
 
     public function getEmail(): string

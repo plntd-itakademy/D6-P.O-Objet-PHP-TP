@@ -2,29 +2,29 @@
 
 namespace TP_Pierre_Louis;
 
-require_once('AuthentificationHelperInterface.php');
+require_once('ServiceHelperInterface.php');
 
-class AuthentificationHelper implements AuthentificationHelperInterface
+class ServiceHelper implements ServiceHelperInterface
 {
     // Design pattern singleton
-    private static $authentificationHelper = null;
+    private static $ServiceHelper = null;
 
     private function __construct()
     {
     }
 
-    public static function getInstance(): AuthentificationHelper
+    public static function getInstance(): ServiceHelper
     {
-        if (Self::$authentificationHelper === null) {
-            return new AuthentificationHelper;
+        if (Self::$ServiceHelper === null) {
+            return new ServiceHelper;
         }
-        return Self::$authentificationHelper;
+        return Self::$ServiceHelper;
     }
 
-    public static function seConnecter($email, $motDePasse, $utilisateurs): mixed
+    public static function seConnecter($login, $motDePasse, $utilisateurs): mixed
     {
         // On récupère l'utilisateur qui correspond à l'email
-        $utilisateur = Self::getUtilisateurByEmail($email, $utilisateurs);
+        $utilisateur = Self::getUtilisateurByEmail($login, $utilisateurs);
 
         // On vérifie si on a bien récupéré un utilisateur et si le mot de passe de l'utilisateur correspond au mot de passe hashé
         if ($utilisateur && password_verify(
@@ -44,5 +44,10 @@ class AuthentificationHelper implements AuthentificationHelperInterface
             if ($utilisateur->getEmail() === $email) return $utilisateur;
         }
         return false;
+    }
+
+    public function hasherMotDePasse($motDePasse): string
+    {
+        return password_hash($motDePasse, PASSWORD_DEFAULT);
     }
 }
