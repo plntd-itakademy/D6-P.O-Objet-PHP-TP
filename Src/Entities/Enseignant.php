@@ -9,12 +9,12 @@ class Enseignant extends Utilisateur
     protected $m_numeroTelephone;
     protected $m_module;
 
-    function setNumeroTelephone(string $p_numeroTelephone)
+    public function setNumeroTelephone(string $p_numeroTelephone)
     {
         $this->m_numeroTelephone = $p_numeroTelephone;
     }
 
-    function setModule(string $p_module)
+    public function setModule(string $p_module)
     {
         $this->m_module = $p_module;
     }

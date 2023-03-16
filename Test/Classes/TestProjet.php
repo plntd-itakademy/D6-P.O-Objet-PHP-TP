@@ -5,6 +5,7 @@ namespace TP_Pierre_Louis\Test\Classes;
 use TP_Pierre_Louis\Services\ServiceHelper;
 use TP_Pierre_Louis\Entities\Eleve;
 use TP_Pierre_Louis\Entities\Enseignant;
+use TP_Pierre_Louis\Entities\Utilisateur;
 
 require_once('../Src/Entities/Eleve.php');
 require_once('../Src/Entities/Enseignant.php');
