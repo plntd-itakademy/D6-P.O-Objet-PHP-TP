@@ -1,6 +1,6 @@
 <?php
 
-namespace TP_Pierre_Louis\Entities;
+namespace TP\Entities;
 
 class Module
 {

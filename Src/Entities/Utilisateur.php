@@ -1,10 +1,8 @@
 <?php
 
-namespace TP_Pierre_Louis\Entities;
+namespace TP\Entities;
 
-use TP_Pierre_Louis\Services\ServiceHelper;
-
-require_once('../Src/Services/Interfaces/ServiceHelperInterface.php');
+use TP\Services\ServiceHelper;
 
 class Utilisateur
 {

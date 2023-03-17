@@ -1,14 +1,13 @@
 <?php
 
-namespace TP_Pierre_Louis\Test\Classes;
+namespace TP\Test\Classes;
 
-use TP_Pierre_Louis\Services\ServiceHelper;
-use TP_Pierre_Louis\Entities\Eleve;
-use TP_Pierre_Louis\Entities\Enseignant;
-use TP_Pierre_Louis\Entities\Utilisateur;
-
-require_once('../Src/Entities/Eleve.php');
-require_once('../Src/Entities/Enseignant.php');
+use TP\Services\CoursRepository;
+use TP\Services\UtilisateurRepository;
+use TP\Entities\Eleve;
+use TP\Entities\Enseignant;
+use TP\Entities\Devoir;
+use TP\Entities\DevoirRendu;
 
 class TestProjet
 {
@@ -17,6 +16,7 @@ class TestProjet
     private $m_eleves;
     private $m_enseignants;
     private $m_utilisateurs;
+    private $m_devoirs;
 
     private function __construct()
     {
@@ -42,26 +42,46 @@ class TestProjet
 
         // Mise en place d'un tableau qui contient tous les élèves
         $data['eleves'] = [
-            Eleve::sInscrire('Nitard', 'Pierre-Louis', 'pl.nitard@it-students.fr', 'CZkn!6yhNruWWW#r$sH'),
-            Eleve::sInscrire('Jean', 'Dupond', 'mail01@mail.com', 'O3sGf&r3VD4Sap!#H3@'),
-            Eleve::sInscrire('Marine', 'Kokz', 'mail02@mail.com', 'TIO1Prg07j@dwwXZ4zv')
+            new Eleve('Nitard', 'Pierre-Louis', 'pl.nitard@it-students.fr', 'CZkn!6yhNruWWW#r$sH'),
+            new Eleve('Jean', 'Dupond', 'mail01@mail.com', 'O3sGf&r3VD4Sap!#H3@'),
+            new Eleve('Marine', 'Kokz', 'mail02@mail.com', 'TIO1Prg07j@dwwXZ4zv')
         ];
 
         // Mise en place d'un tableau qui contient tous les enseignants
         $data['enseignants'] = [
-            Enseignant::sInscrire('Julio', 'Ribeiro', 'j.ribeiro@mail.com', 'kz!fFYJ2T5hmZjWo', '0768764523', 'T16'),
+            new Enseignant('Julio', 'Ribeiro', 'j.ribeiro@mail.com', 'kz!fFYJ2T5hmZjWo', '0768764523', 'D6')
         ];
 
-        // On merge les tableaux des élèves et des étudiants pour rassembler tous les utilisateurs
+        $data['devoirs'] = [
+            new Devoir("Devoir 1", "Faire l'exercice 1", 100, '30/03/2023', $data['enseignants'][0])
+        ];
+
+        // On merge les tableaux des élèves et des enseignants afin de mettre tous les utilisateurs dans un même tableau
         $this->m_utilisateurs = array_merge($data['eleves'], $data['enseignants']);
 
         $this->m_eleves = $data['eleves'];
         $this->m_enseignants = $data['enseignants'];
+        $this->m_devoirs = $data['devoirs'];
     }
 
     public function getUtilisateurs(): array
     {
         return $this->m_utilisateurs;
+    }
+
+    public function getEleves(): array
+    {
+        return $this->m_eleves;
+    }
+
+    public function getEnseignants(): array
+    {
+        return $this->m_enseignants;
+    }
+
+    public function getDevoirs(): array
+    {
+        return $this->m_devoirs;
     }
 
     /**
@@ -71,11 +91,12 @@ class TestProjet
      */
     public function testConnexionUtilisateurInconnu(): string
     {
+        $helperUtilisateur = new UtilisateurRepository;
         $login = 'mail01@mail.com';
         $motDePasse = 'O3sGf&r3VD4Sap!#H3@';
 
         // Appelle de la fonction seConnecter du ServiceHelper. Celle-ci doit retourner false, dans le cas où les identifiants sont incorrects.
-        if (!ServiceHelper::seConnecter($login, $motDePasse, $this->m_utilisateurs)) {
+        if (!$helperUtilisateur->seConnecter($login, $motDePasse, $this->m_utilisateurs)) {
             return 'testConnexionUtilisateurInconnu : OK';
         } else {
             return 'testConnexionUtilisateurInconnu : KO';
@@ -89,14 +110,42 @@ class TestProjet
      */
     public function testConnexionUtilisateurConnu(): string
     {
+        $helperUtilisateur = new UtilisateurRepository;
         $login = 'mail01@mail.com';
         $motDePasse = 'O3sGf&r3VD4Sap!#H3@';
 
         // Appelle de la fonction seConnecter du ServiceHelper. Celle-ci doit retourner un utilisateur, dans le cas où les identifiants sont corrects.
-        if (ServiceHelper::seConnecter($login, $motDePasse, $this->m_utilisateurs)) {
+        if ($helperUtilisateur->seConnecter($login, $motDePasse, $this->m_utilisateurs)) {
             return 'testConnexionUtilisateurConnu : OK';
         } else {
             return 'testConnexionUtilisateurConnu : KO';
         }
+    }
+
+    /**
+     * Test le rendu d'un devoir
+     *
+     * @return DevoirRendu
+     */
+    public function testRendreDevoir(): DevoirRendu
+    {
+        $helperCours = new CoursRepository;
+        $eleve = $this->getEleves()[0];
+        $devoir = $this->getDevoirs()[0];
+
+        return $helperCours->rendreDevoir($eleve, 0, 'Contenu devoir', $devoir);
+    }
+
+    /**
+     * Test le depôt d'un devoir
+     *
+     * @return Devoir
+     */
+    public function testDeposerDevoir(): Devoir
+    {
+        $helperCours = new CoursRepository;
+        $enseignant = $this->getEnseignants()[0];
+
+        return $helperCours->deposerDevoir("Devoir 1", "Faire l'exercice", 100, "30/03/2023", $enseignant);
     }
 }

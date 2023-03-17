@@ -1,6 +1,6 @@
 <?php
 
-namespace TP_Pierre_Louis\Entities;
+namespace TP\Entities;
 
 class Cours
 {
@@ -11,5 +11,9 @@ class Cours
 
     public function __construct(string $p_titre, string $p_contenu, Module $p_module, Promotion $p_promotion)
     {
+        $this->m_titre = $p_titre;
+        $this->m_contenu = $p_contenu;
+        $this->m_module = $p_module;
+        $this->m_promotion = $p_promotion;
     }
 }
