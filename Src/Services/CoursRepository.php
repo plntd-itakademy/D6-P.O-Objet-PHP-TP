@@ -6,6 +6,7 @@ use TP\Entities\Eleve;
 use TP\Entities\Enseignant;
 use TP\Entities\Devoir;
 use TP\Entities\DevoirRendu;
+use TP\Entities\Promotion;
 
 class CoursRepository
 {
@@ -33,8 +34,8 @@ class CoursRepository
      * @param Enseignant $p_enseignant
      * @return Devoir
      */
-    public function deposerDevoir(string $p_titre, string $p_contenu, int $p_noteMax, string $p_deadline, Enseignant $p_enseignant): Devoir
+    public function deposerDevoir(string $p_titre, string $p_contenu, int $p_noteMax, string $p_deadline, Enseignant $p_enseignant, Promotion $p_promotion): Devoir
     {
-        return new Devoir($p_titre, $p_contenu, $p_noteMax, $p_deadline, $p_enseignant);
+        return new Devoir($p_titre, $p_contenu, $p_noteMax, $p_deadline, $p_enseignant, $p_promotion);
     }
 }

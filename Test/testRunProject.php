@@ -10,6 +10,9 @@ require_once('../Src/Services/UtilisateurRepository.php');
 require_once('../Src/Services/Interfaces/ServiceHelperInterface.php');
 require_once('../Src/Entities/Eleve.php');
 require_once('../Src/Entities/Enseignant.php');
+require_once('../Src/Entities/Module.php');
+require_once('../Src/Entities/Promotion.php');
+require_once('../Src/Entities/Cours.php');
 require_once('../Src/Entities/Devoir.php');
 require_once('../Src/Entities/DevoirRendu.php');
 

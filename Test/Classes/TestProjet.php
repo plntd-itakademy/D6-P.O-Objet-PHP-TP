@@ -6,6 +6,9 @@ use TP\Services\CoursRepository;
 use TP\Services\UtilisateurRepository;
 use TP\Entities\Eleve;
 use TP\Entities\Enseignant;
+use TP\Entities\Module;
+use TP\Entities\Cours;
+use TP\Entities\Promotion;
 use TP\Entities\Devoir;
 use TP\Entities\DevoirRendu;
 
@@ -13,10 +16,14 @@ class TestProjet
 {
     // Design pattern singleton
     private static $m_TestProjet = null;
+
     private $m_eleves;
     private $m_enseignants;
     private $m_utilisateurs;
     private $m_devoirs;
+    private $m_modules;
+    private $m_cours;
+    private $m_promotions;
 
     private function __construct()
     {
@@ -40,6 +47,14 @@ class TestProjet
     {
         $data = [];
 
+        $data['modules'] = [
+            new Module('D6')
+        ];
+
+        $data['promotions'] = [
+            new Promotion('DFS27A')
+        ];
+
         // Mise en place d'un tableau qui contient tous les élèves
         $data['eleves'] = [
             new Eleve('Nitard', 'Pierre-Louis', 'pl.nitard@it-students.fr', 'CZkn!6yhNruWWW#r$sH'),
@@ -49,11 +64,15 @@ class TestProjet
 
         // Mise en place d'un tableau qui contient tous les enseignants
         $data['enseignants'] = [
-            new Enseignant('Julio', 'Ribeiro', 'j.ribeiro@mail.com', 'kz!fFYJ2T5hmZjWo', '0768764523', 'D6')
+            new Enseignant('Julio', 'Ribeiro', 'j.ribeiro@mail.com', 'kz!fFYJ2T5hmZjWo', '0768764523', $data['modules'][0])
         ];
 
         $data['devoirs'] = [
-            new Devoir("Devoir 1", "Faire l'exercice 1", 100, '30/03/2023', $data['enseignants'][0])
+            new Devoir("Devoir 1", "Faire l'exercice 1", 100, '30/03/2023', $data['enseignants'][0], $data['promotions'][0])
+        ];
+
+        $data['cours'] = [
+            new Cours('Cours 1', 'Contenu cours', $data['modules'][0], $data['promotions'][0], $data['enseignants'][0])
         ];
 
         // On merge les tableaux des élèves et des enseignants afin de mettre tous les utilisateurs dans un même tableau
@@ -62,6 +81,9 @@ class TestProjet
         $this->m_eleves = $data['eleves'];
         $this->m_enseignants = $data['enseignants'];
         $this->m_devoirs = $data['devoirs'];
+        $this->m_promotions = $data['promotions'];
+        $this->m_modules = $data['modules'];
+        $this->m_cours = $data['cours'];
     }
 
     public function getUtilisateurs(): array
@@ -82,6 +104,21 @@ class TestProjet
     public function getDevoirs(): array
     {
         return $this->m_devoirs;
+    }
+
+    public function getModules(): array
+    {
+        return $this->m_modules;
+    }
+
+    public function getCours(): array
+    {
+        return $this->m_cours;
+    }
+
+    public function getPromotions(): array
+    {
+        return $this->m_promotions;
     }
 
     /**
@@ -145,7 +182,8 @@ class TestProjet
     {
         $helperCours = new CoursRepository;
         $enseignant = $this->getEnseignants()[0];
+        $promotion = $this->getPromotions()[0];
 
-        return $helperCours->deposerDevoir("Devoir 1", "Faire l'exercice", 100, "30/03/2023", $enseignant);
+        return $helperCours->deposerDevoir("Devoir 1", "Faire l'exercice", 100, "30/03/2023", $enseignant, $promotion);
     }
 }
